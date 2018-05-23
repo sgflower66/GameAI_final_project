@@ -105,14 +105,9 @@ def count():
                 score += Search_M[i][j]
             if Search_M[i][j] == 0:
                 tmp_score = search(i, j)
-                if tmp_score != 2:
+                if tmp_score != -2:
                     score += tmp_score
-    if score > 0:
-        return 1
-    if score < 0:
-        return -1
-    else:
-        return 0
+    return np.sign(score)
 
 
 def judge_color(board, group):
@@ -198,6 +193,6 @@ def search(x, y):
         return
     """
 
-# print(judge(testS, testS, 64))
+print(judge(testS, testS, 64))
 
 
