@@ -43,30 +43,17 @@ def judge(paramSp, paramS, a):
     tmp_S = paramS
     tmp_S[x][y] = 1
     # 提子
-    if x > 0 and tmp_S[x - 1][y] != 0:
-        group = slice_group(tmp_S, x - 1, y)
-        if judge_liberty(tmp_S, group) == 0:
-            for l in group:
-                tx, ty = l[0], l[1]
-                tmp_S[tx][ty] = 0
-    if x < 7 and tmp_S[x + 1][y] != 0:
-        group = slice_group(tmp_S, x + 1, y)
-        if judge_liberty(tmp_S, group) == 0:
-            for l in group:
-                tx, ty = l[0], l[1]
-                tmp_S[tx][ty] = 0
-    if y < 7 and tmp_S[x][y + 1] != 0:
-        group = slice_group(tmp_S, x, y + 1)
-        if judge_liberty(tmp_S, group) == 0:
-            for l in group:
-                tx, ty = l[0], l[1]
-                tmp_S[tx][ty] = 0
-    if y > 0 and tmp_S[x][y - 1] != 0:
-        group = slice_group(tmp_S, x, y - 1)
-        if judge_liberty(tmp_S, group) == 0:
-            for l in group:
-                tx, ty = l[0], l[1]
-                tmp_S[tx][ty] = 0
+    for d in direct:
+        tx, ty = l[0] + d[0], l[1] + d[1]
+        if tx < 0 or ty < 0 or tx > 7 or ty > 7:
+            continue;
+        if tmp_S[tx][ty] == -1:
+            group = slice_group(tmp_S, tx, ty)
+            if judge_liberty(tmp_S, group) == 0:
+                for l in group:
+                    tx, ty = l[0], l[1]
+                    tmp_S[tx][ty] = 0
+
     group = slice_group(tmp_S, x, y)
     if judge_liberty(tmp_S, group) == 0 or tmp_S == paramSp:
         return -1, None
