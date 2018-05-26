@@ -47,8 +47,12 @@ class GoGame(Game):
             temp_board = np.copy(b.pieces)
             b.execute_move((x,y), player)
             # TODO
-            if b.pieces.tostring() not in map(self.stringRepresentation, history_board[:-1]):
-                valids[self.n*x+y]=1
+            valids[self.n*x+y]=1
+            for _ in range(len(history_board)-1):
+                if (np.array(b.pieces) == history_board[_]).all():
+                    valids[self.n*x+y] = 0
+                    break;
+                
             b.pieces = np.copy(temp_board)
 
         return np.array(valids)
