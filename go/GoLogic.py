@@ -35,13 +35,49 @@ class Board():
     def countDiff(self, color):
         """Counts the # pieces of the given color
         (1 for white, -1 for black, 0 for empty spaces)"""
-        # TODO 
+        A = deepcopy(self.pieces)
+        B = deepcopy(self.pieces)
+
+        q = Queue()
+        for x in range(self.n):
+            for y in range(self.n):
+                if A[x][y] == 1:
+                    q.put((x,y))
+
+        while not q.empty():
+            now = q.get()
+            for d in self.__directions:
+                nx, ny = now[0] + d[0], now[1] + d[1]
+                if self.out_of_board(nx, ny):
+                    continue
+                if A[nx][ny] == 0:
+                     A[nx][ny] = 1
+                     q.put((nx,ny))
+
+        q = Queue()
+        for x in range(self.n):
+            for y in range(self.n):
+                if B[x][y] == -1:
+                    q.put((x,y))
+
+        while not q.empty():
+            now = q.get()
+            for d in self.__directions:
+                nx, ny = now[0] + d[0], now[1] + d[1]
+                if self.out_of_board(nx, ny):
+                    continue
+                if B[nx][ny] == 0:
+                     B[nx][ny] = -1
+                     q.put((nx,ny))
+
+        C = A + B
+
         count = 0
         for y in range(self.n):
             for x in range(self.n):
-                if self[x][y]==color:
+                if C[x][y]==color:
                     count += 1
-                if self[x][y]==-color:
+                if C[x][y]==-color:
                     count -= 1
         return count
 

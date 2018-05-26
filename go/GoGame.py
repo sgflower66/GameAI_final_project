@@ -48,7 +48,8 @@ class GoGame(Game):
         for x, y in legalMoves:
             temp_board = np.copy(b.pieces)
             b.execute_move((x,y), player)
-            if b.pieces not in history_board:
+            # TODO
+            if b.pieces.tostring() not in map(self.stringRepresentation, history_board[:-1]):
                 valids[self.n*x+y]=1
             b.pieces = np.copy(temp_board)
 
@@ -62,7 +63,14 @@ class GoGame(Game):
 
         move = (-1,-1) if action==self.n*self.n else (action/8,action%8)
 
-        # b.execute_move()
+        
+        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action ==-1:
+            return np.sign(b.countDiff(player) - 0.75)
+
+        # try to move
+        # temp_board = np.copy(b.pieces)
+        # b.execute_move(move, player)
+        # b.pieces = np.copy(temp_board)
 
         if (not b.has_legal_moves(player)) and (not b.has_legal_moves(-player)):
             return np.sign(b.countDiff(player) - 0.75)
