@@ -40,7 +40,7 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         legalMoves =  b.get_legal_moves(player)
-        valids[-1]=1
+        valids[-1] = 1
         if len(legalMoves)==0:
             return np.array(valids)
         for x, y in legalMoves:
@@ -48,7 +48,7 @@ class GoGame(Game):
             b.execute_move((x,y), player)
             # TODO
             valids[self.n*x+y]=1
-            for _ in range(len(history_board)-1):
+            for _ in range(len(history_board)):
                 if (np.array(b.pieces) == history_board[_]).all():
                     valids[self.n*x+y] = 0
                     break;
