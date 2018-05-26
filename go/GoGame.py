@@ -64,7 +64,7 @@ class GoGame(Game):
         move = (-1,-1) if action==self.n*self.n else (action/8,action%8)
 
         
-        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action ==-1:
+        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action ==64:
             return np.sign(b.countDiff(player) - 0.75)
 
         # try to move
