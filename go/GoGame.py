@@ -62,10 +62,12 @@ class GoGame(Game):
         move = (-1,-1) if action==self.n*self.n else (action/self.n,action%self.n)
 
         
-        print(board.tostring())
-        if len(history_board) > 0 :
-            print(self.getCanonicalForm(history_board[-1], -1).tostring())
-        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action == self.n:
+        if(action == self.n*self.n):
+            print(board)
+            print(history_board[-1])
+            print("!!" , (board==history_board[-1]).all() )
+
+        if action == self.n*self.n and (board==history_board[-1]).all():
             print(" both player pass")
             return np.sign(b.countDiff(player) - 0.75)
 

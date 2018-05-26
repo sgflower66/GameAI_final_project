@@ -117,6 +117,8 @@ class MCTS():
         if r==0:
             before_s = deepcopy(before_canonicalBoard)
             before_s.append(deepcopy(canonicalBoard))
+
+            print("take action ", a)
             next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
             next_s = self.game.getCanonicalForm(next_s, next_player)
             _len = len(before_s)

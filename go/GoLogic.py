@@ -10,7 +10,7 @@ Board data:
 Squares are stored and manipulated as (x,y) tuples.
 x is the column, y is the row.
 '''
-
+from copy import deepcopy
 from queue import Queue
 
 class Board():
