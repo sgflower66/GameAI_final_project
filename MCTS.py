@@ -65,8 +65,7 @@ class MCTS():
         Returns:
             v: the negative of the value of the current canonicalBoard
         """
-        print("searching ")
-        print(canonicalBoard)
+
         s = self.game.stringRepresentation(canonicalBoard)
 
         # if s not in self.Es:
@@ -118,7 +117,6 @@ class MCTS():
             before_s = deepcopy(before_canonicalBoard)
             before_s.append(deepcopy(canonicalBoard))
 
-            print("take action ", a)
             next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
             next_s = self.game.getCanonicalForm(next_s, next_player)
             _len = len(before_s)
