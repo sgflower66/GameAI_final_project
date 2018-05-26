@@ -1,6 +1,6 @@
 from Coach import Coach
-from othello.OthelloGame import OthelloGame as Game
-from othello.pytorch.NNet import NNetWrapper as nn
+from go.GoGame import GoGame as Game
+from go.tensorflow.NNet import NNetWrapper as nn
 from utils import *
 
 args = dotdict({
