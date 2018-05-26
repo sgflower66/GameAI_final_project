@@ -32,31 +32,37 @@ class GoGame(Game):
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, player)
-        print(b.move_count)
         print(move)
         display(b.pieces)
         return (b.pieces, -player)
 
-    def getValidMoves(self, board, player):
+    def getValidMoves(self, history_board, board, player):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         b = Board(self.n)
         b.pieces = np.copy(board)
         legalMoves =  b.get_legal_moves(player)
-        #valids[-1]=1
+        valids[-1]=1
         if len(legalMoves)==0:
             return np.array(valids)
         for x, y in legalMoves:
-            valids[self.n*x+y]=1
+            temp_board = np.copy(b.pieces)
+            b.execute_move((x,y), player)
+            if b.pieces not in history_board:
+                valids[self.n*x+y]=1
+            b.pieces = np.copy(temp_board)
+
         return np.array(valids)
 
-    def getGameEnded(self, board, player):
+    def getGameEnded(self, history_board, board, player, action):
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
         b = Board(self.n)
         b.pieces = np.copy(board)
-        if (b.prev_x == -2 and b.prev_y == -2) or b.move_count > 64:
-            return np.sign(b.countDiff(player) - 0.75)
+
+        move = (-1,-1) if action==self.n*self.n else (action/8,action%8)
+
+        # b.execute_move()
 
         if (not b.has_legal_moves(player)) and (not b.has_legal_moves(-player)):
             return np.sign(b.countDiff(player) - 0.75)

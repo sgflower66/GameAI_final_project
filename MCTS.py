@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from copy import deepcopy
 EPS = 1e-8
 
 class MCTS():
@@ -115,7 +116,7 @@ class MCTS():
         if r==0:
             before_s = deepcopy(before_canonicalBoard)
             before_s.append(deepcopy(canonicalBoard))
-            next_s, next_player = self.game.getNextState(before_canonicalBoard, canonicalBoard, 1, a)
+            next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
             next_s = self.game.getCanonicalForm(next_s, next_player)
             _len = len(before_s)
             for _i in range(_len):

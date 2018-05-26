@@ -27,11 +27,6 @@ class Board():
         for i in range(self.n):
             self.pieces[i] = [0]*self.n
 
-        self.prev_x = -1
-        self.prev_y = -1
-
-        self.move_count = 0
-
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 
@@ -90,6 +85,7 @@ class Board():
         return False
 
 
+
     def execute_move(self, move, color):
         """Perform the given move on the board; flips pieces as necessary.
         color gives the color pf the piece to play (1=white,-1=black)
@@ -99,16 +95,9 @@ class Board():
         #follow it on all 8 directions to look for a piece allowing flipping.
 
         # Add the piece to the empty square.
-        # print(move)
         x, y = move[0], move[1]
-        if self.prev_x == x and self.prev_y == y:
-            self.prev_x, self.prev_y = -2, -2
-        else:
-            self.prev_x, self.prev_y = x, y
-        
-        self.move_count += 1
 
-        if move == -1:
+        if move == (-1,-1):
             return
 
         self[x][y] = color
@@ -120,6 +109,7 @@ class Board():
                 self.liberty(nx, ny, True)
          
 
+    
     def liberty(self, x, y, take = False):
         color = self[x][y]
         if color == 0:
