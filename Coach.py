@@ -48,6 +48,7 @@ class Coach():
 
         while True:
             episodeStep += 1
+            
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             _len = len(before_board)
             before_canonicalBoard=[]
@@ -62,12 +63,18 @@ class Coach():
                 trainExamples.append([b, self.curPlayer, p, None])
             
             action = np.random.choice(len(pi), p=pi)
+            
+
 
             r = self.game.getGameEnded(before_board, board, self.curPlayer, action)                  
             if r==0:    
                 before_board.append(deepcopy(board))                                                 
                 board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)        
 
+                print("step",episodeStep)
+                move = (-1,-1) if action==self.game.n*self.game.n else (action//self.game.n,action%self.game.n)
+                print(move)
+                print(board)
             else:                                                      #tcz
                 return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
 

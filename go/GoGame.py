@@ -32,8 +32,8 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        print(move)
-        display(b.pieces)
+        # print(move)
+        # display(b.pieces)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
@@ -54,10 +54,10 @@ class GoGame(Game):
             for _ in range(len(history_board)):
                 if (np.array(b.pieces) == history_board[_]).all():
                     valids[self.n*x+y] = 0
-                    break;
+                    # break;
                 if (np.array(b.pieces) == -1*history_board[_]).all():
                     valids[self.n*x+y] = 0
-                    break;
+                    # break;
                 
             b.pieces = np.copy(temp_board)
 
@@ -69,10 +69,13 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
 
-        move = (-1,-1) if action==self.n*self.n else (action/self.n,action%self.n)
+        move = (-1,-1) if action==self.n*self.n else (int(action/self.n),action%self.n)
 
 
         if action == self.n*self.n and (board==-1*history_board[-1]).all():
+            return np.sign(b.countDiff(player) - 0.75)
+
+        if action == self.n*self.n and (board==history_board[-1]).all():
             return np.sign(b.countDiff(player) - 0.75)
 
         if (not b.has_legal_moves(player)) and (not b.has_legal_moves(-player)):
