@@ -26,15 +26,15 @@ class GoGame(Game):
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
+        # print(action)
         if action == self.n*self.n:
-            print("pass")
             return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        b.execute_move(move, player)
         print(move)
         display(b.pieces)
+        b.execute_move(move, player)
         return (b.pieces, -player)
 
     def getValidMoves(self, history_board, board, player):
@@ -43,15 +43,22 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         legalMoves =  b.get_legal_moves(player)
-        valids[-1]=1
+        valids[-1] = 1
         if len(legalMoves)==0:
             return np.array(valids)
         for x, y in legalMoves:
             temp_board = np.copy(b.pieces)
             b.execute_move((x,y), player)
             # TODO
-            if b.pieces.tostring() not in map(self.stringRepresentation, history_board[:-1]):
-                valids[self.n*x+y]=1
+            valids[self.n*x+y]=1
+            for _ in range(len(history_board)):
+                if (np.array(b.pieces) == history_board[_]).all():
+                    valids[self.n*x+y] = 0
+                    break;
+                if (np.array(b.pieces) == -1*history_board[_]).all():
+                    valids[self.n*x+y] = 0
+                    break;
+                
             b.pieces = np.copy(temp_board)
 
         return np.array(valids)
@@ -63,15 +70,10 @@ class GoGame(Game):
         b.pieces = np.copy(board)
 
         move = (-1,-1) if action==self.n*self.n else (action/self.n,action%self.n)
-        
-        if len(history_board) > 0 and (board == self.getCanonicalForm(history_board[-1], -1)).all() and action ==self.n*self.n:
-            print("end because of pass")
-            return np.sign(b.countDiff(player) - 0.75)
 
-        # try to move
-        # temp_board = np.copy(b.pieces)
-        # b.execute_move(move, player)
-        # b.pieces = np.copy(temp_board)
+
+        if action == self.n*self.n and (board==-1*history_board[-1]).all():
+            return np.sign(b.countDiff(player) - 0.75)
 
         if (not b.has_legal_moves(player)) and (not b.has_legal_moves(-player)):
             return np.sign(b.countDiff(player) - 0.75)

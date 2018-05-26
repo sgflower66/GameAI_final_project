@@ -52,7 +52,8 @@ class Coach():
             _len = len(before_board)
             before_canonicalBoard=[]
             for _i in range(_len):
-                before_canonicalBoard.append(self.game.getCanonicalForm(before_board[_i],pow(-1,_len-_i)*self.curPlayer))       #随canoniacalBoard进行修改   
+                who = 1 if (_i&1) == 0 else -1
+                before_canonicalBoard.append(self.game.getCanonicalForm(before_board[_i], who * self.curPlayer))       #随canoniacalBoard进行修改   
             temp = int(episodeStep < self.args.tempThreshold)
 
             pi = self.mcts.getActionProb(before_canonicalBoard, canonicalBoard, temp=temp)           
