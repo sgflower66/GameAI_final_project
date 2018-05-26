@@ -32,8 +32,6 @@ class GoGame(Game):
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, player)
-        print(move)
-        display(b.pieces)
         return (b.pieces, -player)
 
     def getValidMoves(self, history_board, board, player):
@@ -61,10 +59,14 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
 
-        move = (-1,-1) if action==self.n*self.n else (action/8,action%8)
+        move = (-1,-1) if action==self.n*self.n else (action/self.n,action%self.n)
 
         
-        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action ==-1:
+        print(board.tostring())
+        if len(history_board) > 0 :
+            print(self.getCanonicalForm(history_board[-1], -1).tostring())
+        if len(history_board) > 0 and board.tostring() == self.getCanonicalForm(history_board[-1], -1).tostring() and action == self.n:
+            print(" both player pass")
             return np.sign(b.countDiff(player) - 0.75)
 
         # try to move
