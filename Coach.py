@@ -42,7 +42,7 @@ class Coach():
         """
         trainExamples = []
         board = self.game.getInitBoard()
-        before_board = []          # 之前的board的list,tcz
+        before_board = []          # 之前的board的list,存储真正的棋盘，需要curPlayer指示
         self.curPlayer = 1
         episodeStep = 0
 
@@ -52,19 +52,19 @@ class Coach():
             _len = len(before_board)
             before_canonicalBoard=[]
             for _i in range(_len):
-                before_canonicalBoard.append(self.game.getCanonicalForm(before_board[_i],self.curPlayer))       #tcz   
+                before_canonicalBoard.append(self.game.getCanonicalForm(before_board[_i],self.curPlayer))       #随canoniacalBoard进行修改   
             temp = int(episodeStep < self.args.tempThreshold)
 
-            pi = self.mcts.getActionProb(before_canonicalBoard, canonicalBoard, temp=temp)           #tcz
+            pi = self.mcts.getActionProb(before_canonicalBoard, canonicalBoard, temp=temp)           
             sym = self.game.getSymmetries(canonicalBoard, pi)
             for b,p in sym:
                 trainExamples.append([b, self.curPlayer, p, None])
 
-            r = self.game.getGameEnded(before_board, board, self.curPlayer, action)                  #tcz
-            if r==0:                                                                                 #
+            r = self.game.getGameEnded(before_board, board, self.curPlayer, action)                  
+            if r==0:                                                                                 
                 action = np.random.choice(len(pi), p=pi)
-                before_board.append(deepcopy(board))                                                 #tcz
-                board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)        #tcz
+                before_board.append(deepcopy(board))                                                 
+                board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)        
 
             else:                                                      #tcz
                 return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
