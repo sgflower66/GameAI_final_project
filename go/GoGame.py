@@ -26,15 +26,12 @@ class GoGame(Game):
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        print("1")
         if action == self.n*self.n:
             print("pass")
-            display(np.copy(board))
             return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        print("12")
         b.execute_move(move, player)
         print(move)
         display(b.pieces)
@@ -66,9 +63,9 @@ class GoGame(Game):
         b.pieces = np.copy(board)
 
         move = (-1,-1) if action==self.n*self.n else (action/self.n,action%self.n)
-
         
         if len(history_board) > 0 and (board == self.getCanonicalForm(history_board[-1], -1)).all() and action ==self.n*self.n:
+            print("end because of pass")
             return np.sign(b.countDiff(player) - 0.75)
 
         # try to move
