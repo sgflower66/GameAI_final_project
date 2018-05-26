@@ -6,6 +6,8 @@ from pytorch_classification.utils import Bar, AverageMeter
 import time, os, sys
 from pickle import Pickler, Unpickler
 from random import shuffle
+from copy import deepcopy
+from math import pow
 
 
 class Coach():
@@ -40,25 +42,31 @@ class Coach():
         """
         trainExamples = []
         board = self.game.getInitBoard()
+        before_board = []          # 之前的board的list,tcz
         self.curPlayer = 1
         episodeStep = 0
 
         while True:
             episodeStep += 1
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
+            _len = len(before_board)
+            before_canonicalBoard=[]
+            for _i in range(_len):
+                before_canonicalBoard.append(self.game.getCanonicalForm(before_board[_i],self.curPlayer))       #tcz   
             temp = int(episodeStep < self.args.tempThreshold)
 
-            pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+            pi = self.mcts.getActionProb(before_canonicalBoard, canonicalBoard, temp=temp)           #tcz
             sym = self.game.getSymmetries(canonicalBoard, pi)
             for b,p in sym:
                 trainExamples.append([b, self.curPlayer, p, None])
 
-            action = np.random.choice(len(pi), p=pi)
-            board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
+            r = self.game.getGameEnded(before_board, board, self.curPlayer, action)                  #tcz
+            if r==0:                                                                                 #
+                action = np.random.choice(len(pi), p=pi)
+                before_board.append(deepcopy(board))                                                 #tcz
+                board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)        #tcz
 
-            r = self.game.getGameEnded(board, self.curPlayer)
-
-            if r!=0:
+            else:                                                      #tcz
                 return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
 
     def learn(self):
